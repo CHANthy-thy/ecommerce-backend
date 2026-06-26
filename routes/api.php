@@ -7,10 +7,12 @@ use Illuminate\Support\Facades\Route;
 
 use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\CheckoutController;
+use App\Http\Controllers\Api\ReviewController;
 
 Route::post('/register', [AuthController::class, 'register']);
 
 Route::post('/login', [AuthController::class, 'login']);
+
 Route::middleware('auth:sanctum')->post('/logout', [AuthController::class, 'logout']);
 Route::middleware('auth:sanctum')->get('/profile', [AuthController::class, 'profile']);
 Route::middleware('auth:sanctum')->put('/profile', [AuthController::class, 'updateProfile']);
@@ -42,9 +44,24 @@ Route::middleware('auth:sanctum')->delete('/cart/{productId}', [CartController::
 // Checkout (auth required)
 Route::middleware('auth:sanctum')->post('/checkout', [CheckoutController::class, 'store']);
 
+// Reviews
+Route::get('/products/{id}/reviews', [ReviewController::class, 'index']);
+Route::middleware('auth:sanctum')->post('/products/{id}/reviews', [ReviewController::class, 'store']);
+Route::middleware('auth:sanctum')->delete('/reviews/{id}', [ReviewController::class, 'destroy']);
+
 // Orders (auth required)
 Route::middleware('auth:sanctum')->get('/orders', [\App\Http\Controllers\Api\OrderController::class, 'index']);
 Route::middleware('auth:sanctum')->get('/orders/{id}', [\App\Http\Controllers\Api\OrderController::class, 'show']);
+
+
+
+
+
+
+
+
+
+
 
 
 

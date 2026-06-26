@@ -103,8 +103,8 @@ class AuthController extends Controller
             ], 401);
         }
 
-        // Issue Sanctum token for all users (role differentiator is returned in payload)
-        $token = $user->createToken('api')->plainTextToken;
+        $tokenResult = $user->createToken('api');
+        $token = $tokenResult->plainTextToken;
 
         return response()->json([
             'message' => 'Login successful',
@@ -116,7 +116,7 @@ class AuthController extends Controller
                 'email' => $user->email,
                 'role' => $user->role ?? 'user',
             ],
-        ]);
+        ], 200);
     }
 
     public function logout(Request $request)

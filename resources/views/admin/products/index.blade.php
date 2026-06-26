@@ -33,7 +33,10 @@
                             <tr>
                                 <td>
                                     @if (!empty($product->image))
-                                        <img src="{{ asset('storage/' . $product->image) }}" alt="{{ $product->name }}" style="width: 64px; height: 64px; object-fit: cover; border-radius: 10px; border: 1px solid rgba(0,0,0,0.1);">
+                                        @php $imgSrc = Str::startsWith($product->image, ['http://', 'https://']) ? $product->image : asset('storage/' . $product->image); @endphp
+                                        <a href="{{ $imgSrc }}" target="_blank">
+                                            <img src="{{ $imgSrc }}" alt="{{ $product->name }}" style="width: 64px; height: 64px; object-fit: cover; border-radius: 10px; border: 1px solid rgba(0,0,0,0.1);">
+                                        </a>
                                     @else
                                         <span class="text-muted">N/A</span>
                                     @endif

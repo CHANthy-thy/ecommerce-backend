@@ -59,8 +59,14 @@
 
                 <div class="mb-3">
                     <label class="form-label">Image Upload</label>
-                    <input type="file" name="image" class="form-control" accept="image/*" required>
+                    <input type="file" name="image_file" class="form-control" accept="image/*" id="imageFile">
                     <div class="form-text">Upload JPG, PNG, or WebP (max 2MB).</div>
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label">Image URL</label>
+                    <input type="url" name="image_url" class="form-control" placeholder="https://example.com/image.jpg" id="imageUrl">
+                    <div class="form-text">Or paste a direct link to an image. Leave both empty to skip.</div>
                 </div>
 
                 <button type="submit" class="btn btn-primary">Create</button>

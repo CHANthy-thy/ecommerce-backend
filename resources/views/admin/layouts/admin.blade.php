@@ -33,17 +33,20 @@
             display: block;
             padding: 10px 12px;
             border-radius: 8px;
-            color: var(--bs-body-color);
+            color: #f1f5f9;
             text-decoration: none;
         }
 
         .admin-nav-link:hover {
-            background: rgba(255,255,255,0.06);
+            background: rgba(255,255,255,0.1);
+            color: #ffffff;
             text-decoration: none;
         }
 
         .admin-nav-link.active {
-            background: rgba(255,255,255,0.12);
+            background: rgba(255,255,255,0.15);
+            color: #ffffff;
+            font-weight: 600;
         }
     </style>
 

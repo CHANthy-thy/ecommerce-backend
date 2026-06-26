@@ -68,9 +68,12 @@
                         <p class="text-muted mb-2">No image uploaded.</p>
                     @endif
 
-                    <label class="form-label mt-3">Upload New Image (optional)</label>
-                    <input type="file" name="image" class="form-control" accept="image/*">
-                    <div class="form-text">Leave empty to keep the current image.</div>
+                    <label class="form-label mt-3">Change Image — Upload File (optional)</label>
+                    <input type="file" name="image_file" class="form-control" accept="image/*" id="imageFile">
+                    <div class="form-text">Leave file empty and image URL empty to keep the current image.</div>
+
+                    <label class="form-label mt-3">Or Paste Image URL</label>
+                    <input type="url" name="image_url" class="form-control" placeholder="https://example.com/image.jpg" id="imageUrl" value="{{ old('image_url') }}">
                 </div>
 
                 <button type="submit" class="btn btn-primary">Save Changes</button>

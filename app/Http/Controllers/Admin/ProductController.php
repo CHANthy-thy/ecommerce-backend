@@ -6,6 +6,8 @@ use App\Http\Controllers\Controller;
 use App\Models\Category;
 use App\Models\Product;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
+
 class ProductController extends Controller
 {
     public function index()
@@ -29,25 +31,23 @@ class ProductController extends Controller
     {
         $validated = $request->validate([
             'category_id' => ['required', 'integer', 'exists:categories,id'],
-            'name' => ['required', 'string', 'max:255'],
+            'name'        => ['required', 'string', 'max:255'],
             'description' => ['nullable', 'string'],
-            'price' => ['required', 'numeric', 'min:0'],
-            'stock' => ['required', 'integer', 'min:0'],
-            'image' => ['required', 'image', 'mimes:jpg,jpeg,png,webp', 'max:2048'],
+            'price'       => ['required', 'numeric', 'min:0'],
+            'stock'       => ['required', 'integer', 'min:0'],
+            'image_file'  => ['nullable', 'image', 'mimes:jpg,jpeg,png,webp', 'max:2048'],
+            'image_url'   => ['nullable', 'url', 'max:2000'],
         ]);
 
-        $imagePath = null;
-        if ($request->hasFile('image')) {
-            $imagePath = $request->file('image')->store('products', 'public');
-        }
+        $imagePath = $this->resolveImage($request->file('image_file'), $request->input('image_url'));
 
-        $product = Product::create([
+        Product::create([
             'category_id' => $validated['category_id'],
-            'name' => $validated['name'],
+            'name'        => $validated['name'],
             'description' => $validated['description'] ?? null,
-            'price' => $validated['price'],
-            'stock' => $validated['stock'],
-            'image' => $imagePath,
+            'price'       => $validated['price'],
+            'stock'       => $validated['stock'],
+            'image'       => $imagePath,
         ]);
 
         return redirect()->route('admin.products.index')
@@ -65,41 +65,54 @@ class ProductController extends Controller
     {
         $validated = $request->validate([
             'category_id' => ['required', 'integer', 'exists:categories,id'],
-            'name' => ['required', 'string', 'max:255'],
+            'name'        => ['required', 'string', 'max:255'],
             'description' => ['nullable', 'string'],
-            'price' => ['required', 'numeric', 'min:0'],
-            'stock' => ['required', 'integer', 'min:0'],
-            'image' => ['nullable', 'image', 'mimes:jpg,jpeg,png,webp', 'max:2048'],
+            'price'       => ['required', 'numeric', 'min:0'],
+            'stock'       => ['required', 'integer', 'min:0'],
+            'image_file'  => ['nullable', 'image', 'mimes:jpg,jpeg,png,webp', 'max:2048'],
+            'image_url'   => ['nullable', 'url', 'max:2000'],
         ]);
 
-        $newImagePath = $product->image;
-
-        if ($request->hasFile('image')) {
-            // delete old image if present
-            if ($product->image) {
-                \Illuminate\Support\Facades\Storage::disk('public')->delete($product->image);
-            }
-
-            $newImagePath = $request->file('image')->store('products', 'public');
-        }
+        $imagePath = $this->resolveImage(
+            $request->file('image_file'),
+            $request->input('image_url'),
+            $product->image
+        );
 
         $product->update([
             'category_id' => $validated['category_id'],
-            'name' => $validated['name'],
+            'name'        => $validated['name'],
             'description' => $validated['description'] ?? null,
-            'price' => $validated['price'],
-            'stock' => $validated['stock'],
-            'image' => $newImagePath,
+            'price'       => $validated['price'],
+            'stock'       => $validated['stock'],
+            'image'       => $imagePath,
         ]);
 
         return redirect()->route('admin.products.index')
             ->with('success', 'Product updated successfully.');
     }
 
+    private function resolveImage(?object $uploadedFile, ?string $url, ?string $oldPath = null): ?string
+    {
+        if ($uploadedFile) {
+            if ($oldPath) {
+                Storage::disk('public')->delete($oldPath);
+            }
+
+            return $uploadedFile->store('products', 'public');
+        }
+
+        if ($url) {
+            return $url;
+        }
+
+        return $oldPath;
+    }
+
     public function destroy(Product $product)
     {
         if ($product->image) {
-            \Illuminate\Support\Facades\Storage::disk('public')->delete($product->image);
+            Storage::disk('public')->delete($product->image);
         }
 
         $product->delete();
@@ -108,4 +121,3 @@ class ProductController extends Controller
             ->with('success', 'Product deleted successfully.');
     }
 }
-
