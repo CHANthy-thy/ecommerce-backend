@@ -6,7 +6,6 @@ use App\Http\Controllers\Controller;
 use App\Models\Category;
 use App\Models\Product;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Storage;
 
 class ProductController extends Controller
 {
@@ -35,19 +34,16 @@ class ProductController extends Controller
             'description' => ['nullable', 'string'],
             'price'       => ['required', 'numeric', 'min:0'],
             'stock'       => ['required', 'integer', 'min:0'],
-            'image_file'  => ['nullable', 'image', 'mimes:jpg,jpeg,png,webp', 'max:2048'],
-            'image_url'   => ['nullable', 'url', 'max:2000'],
+            'image'       => ['required', 'url', 'max:2048'],
         ]);
-
-        $imagePath = $this->resolveImage($request->file('image_file'), $request->input('image_url'));
 
         Product::create([
             'category_id' => $validated['category_id'],
-            'name'        => $validated['name'],
+            'name' => $validated['name'],
             'description' => $validated['description'] ?? null,
-            'price'       => $validated['price'],
-            'stock'       => $validated['stock'],
-            'image'       => $imagePath,
+            'price' => $validated['price'],
+            'stock' => $validated['stock'],
+            'image' => $validated['image'],
         ]);
 
         return redirect()->route('admin.products.index')
@@ -69,52 +65,24 @@ class ProductController extends Controller
             'description' => ['nullable', 'string'],
             'price'       => ['required', 'numeric', 'min:0'],
             'stock'       => ['required', 'integer', 'min:0'],
-            'image_file'  => ['nullable', 'image', 'mimes:jpg,jpeg,png,webp', 'max:2048'],
-            'image_url'   => ['nullable', 'url', 'max:2000'],
+            'image'       => ['required', 'url', 'max:2048'],
         ]);
-
-        $imagePath = $this->resolveImage(
-            $request->file('image_file'),
-            $request->input('image_url'),
-            $product->image
-        );
 
         $product->update([
             'category_id' => $validated['category_id'],
-            'name'        => $validated['name'],
+            'name' => $validated['name'],
             'description' => $validated['description'] ?? null,
-            'price'       => $validated['price'],
-            'stock'       => $validated['stock'],
-            'image'       => $imagePath,
+            'price' => $validated['price'],
+            'stock' => $validated['stock'],
+            'image' => $validated['image'],
         ]);
 
         return redirect()->route('admin.products.index')
             ->with('success', 'Product updated successfully.');
     }
 
-    private function resolveImage(?object $uploadedFile, ?string $url, ?string $oldPath = null): ?string
-    {
-        if ($uploadedFile) {
-            if ($oldPath) {
-                Storage::disk('public')->delete($oldPath);
-            }
-
-            return $uploadedFile->store('products', 'public');
-        }
-
-        if ($url) {
-            return $url;
-        }
-
-        return $oldPath;
-    }
-
     public function destroy(Product $product)
     {
-        if ($product->image) {
-            Storage::disk('public')->delete($product->image);
-        }
-
         $product->delete();
 
         return redirect()->route('admin.products.index')

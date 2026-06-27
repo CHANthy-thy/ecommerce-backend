@@ -1,0 +1,15 @@
+Step 8 will create/update these seeders before running:
+
+1) database/seeders/CategorySeeder.php
+2) database/seeders/BrandSeeder.php
+3) database/seeders/ProductSeeder.php
+4) database/seeders/DatabaseSeeder.php (calls the three)
+
+At the moment:
+- CategorySeeder: already updated to 10 categories (from Step 3).
+- BrandSeeder: created (10 brands) and DatabaseSeeder now calls it.
+- ProductSeeder: still needs to be rewritten to create 50 skincare products with fields required by schema:
+  slug, brand_id, skin_type, volume, ingredients, status, plus existing: category_id, name, description, price, stock, image.
+
+Do not run db:seed until ProductSeeder is rewritten accordingly.
+

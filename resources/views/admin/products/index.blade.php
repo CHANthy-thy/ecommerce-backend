@@ -32,15 +32,24 @@
                         @forelse ($products as $product)
                             <tr>
                                 <td>
-                                    @if (!empty($product->image))
-                                        @php $imgSrc = Str::startsWith($product->image, ['http://', 'https://']) ? $product->image : asset('storage/' . $product->image); @endphp
-                                        <a href="{{ $imgSrc }}" target="_blank">
-                                            <img src="{{ $imgSrc }}" alt="{{ $product->name }}" style="width: 64px; height: 64px; object-fit: cover; border-radius: 10px; border: 1px solid rgba(0,0,0,0.1);">
+                                    @php
+                                        $imgSrc = $product->image ?: asset('images/products/placeholder-100x100.png');
+                                    @endphp
+                                    @if ($product->image)
+                                        <a href="{{ $product->image }}" target="_blank" rel="noopener noreferrer">
+                                    @endif
+                                        <img
+                                            src="{{ $imgSrc }}"
+                                            alt="{{ $product->name }}"
+                                            style="width: 70px; height: 70px; object-fit: cover; border-radius: 8px;"
+                                            loading="lazy"
+                                            onerror="this.src='{{ asset('images/products/placeholder-100x100.png') }}'"
+                                        >
+                                    @if ($product->image)
                                         </a>
-                                    @else
-                                        <span class="text-muted">N/A</span>
                                     @endif
                                 </td>
+
                                 <td class="fw-medium">{{ $product->name }}</td>
                                 <td class="text-muted">{{ $product->category?->name ?? '—' }}</td>
                                 <td>{{ number_format((float)$product->price, 2) }}</td>
@@ -72,5 +81,3 @@
         </div>
     </div>
 @endsection
-
-

@@ -3,13 +3,11 @@
 namespace App\Http\Resources;
 
 use App\Models\Product;
+
 use Illuminate\Http\Resources\Json\JsonResource;
 
 class ProductResource extends JsonResource
 {
-    /** @var Product */
-    public $resource;
-
     public function toArray($request): array
     {
         return [
@@ -26,10 +24,9 @@ class ProductResource extends JsonResource
             'description' => $this->description,
             'price' => $this->price,
             'stock' => $this->stock,
-            'image' => $this->image ? (filter_var($this->image, FILTER_VALIDATE_URL) ? $this->image : asset('storage/' . $this->image)) : null,
+            'image' => $this->image ?: null,
             'created_at' => optional($this->created_at)->toISOString(),
             'updated_at' => optional($this->updated_at)->toISOString(),
         ];
     }
 }
-

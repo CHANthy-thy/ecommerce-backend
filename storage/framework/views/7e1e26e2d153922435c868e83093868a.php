@@ -1,14 +1,14 @@
-@extends('admin.layouts.admin')
 
-@section('title', 'Admin Dashboard')
-@section('heading', 'Admin Dashboard')
-@section('subheading', 'E-commerce overview')
 
-@section('content')
-    {{-- Icons --}}
+<?php $__env->startSection('title', 'Admin Dashboard'); ?>
+<?php $__env->startSection('heading', 'Admin Dashboard'); ?>
+<?php $__env->startSection('subheading', 'E-commerce overview'); ?>
+
+<?php $__env->startSection('content'); ?>
+    
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
 
-    {{-- Simple chart placeholder styles (future-ready) --}}
+    
     <style>
         .stat-card .stat-icon {
             width: 44px;
@@ -38,7 +38,7 @@
     </style>
 
 
-@php
+<?php
         // Controller passes $dashboardData; keep local fallbacks for robustness.
         $stats = $dashboardData['stats'] ?? [];
         $recentOrders = $dashboardData['recentOrders'] ?? [];
@@ -59,16 +59,16 @@
                 default => 'secondary',
             };
         };
-    @endphp
+    ?>
 
-    {{-- Stat cards --}}
+    
     <div class="row g-3">
         <div class="col-12 col-sm-6 col-lg-3">
             <div class="card shadow-sm h-100 stat-card">
                 <div class="card-body d-flex align-items-center justify-content-between">
                     <div>
                         <div class="text-muted">Total Categories</div>
-                        <div class="fs-2 fw-bold">{{ $stats['total_categories'] ?? 0 }}</div>
+                        <div class="fs-2 fw-bold"><?php echo e($stats['total_categories'] ?? 0); ?></div>
                     </div>
                     <div class="stat-icon bg-primary text-primary"><i class="bi bi-tags fs-4"></i></div>
                 </div>
@@ -80,7 +80,7 @@
                 <div class="card-body d-flex align-items-center justify-content-between">
                     <div>
                         <div class="text-muted">Total Brands</div>
-                        <div class="fs-2 fw-bold">{{ $stats['total_brands'] ?? 0 }}</div>
+                        <div class="fs-2 fw-bold"><?php echo e($stats['total_brands'] ?? 0); ?></div>
                     </div>
                     <div class="stat-icon bg-success text-success"><i class="bi bi-bag-check fs-4"></i></div>
                 </div>
@@ -92,7 +92,7 @@
                 <div class="card-body d-flex align-items-center justify-content-between">
                     <div>
                         <div class="text-muted">Total Products</div>
-                        <div class="fs-2 fw-bold">{{ $stats['total_products'] ?? 0 }}</div>
+                        <div class="fs-2 fw-bold"><?php echo e($stats['total_products'] ?? 0); ?></div>
                     </div>
                     <div class="stat-icon bg-info text-info"><i class="bi bi-box-seam fs-4"></i></div>
                 </div>
@@ -104,7 +104,7 @@
                 <div class="card-body d-flex align-items-center justify-content-between">
                     <div>
                         <div class="text-muted">Total Users</div>
-                        <div class="fs-2 fw-bold">{{ $stats['total_users'] ?? 0 }}</div>
+                        <div class="fs-2 fw-bold"><?php echo e($stats['total_users'] ?? 0); ?></div>
                     </div>
                     <div class="stat-icon bg-warning text-warning"><i class="bi bi-people fs-4"></i></div>
                 </div>
@@ -116,7 +116,7 @@
                 <div class="card-body d-flex align-items-center justify-content-between">
                     <div>
                         <div class="text-muted">Total Orders</div>
-                        <div class="fs-2 fw-bold">{{ $stats['total_orders'] ?? 0 }}</div>
+                        <div class="fs-2 fw-bold"><?php echo e($stats['total_orders'] ?? 0); ?></div>
                     </div>
                     <div class="stat-icon bg-primary text-primary"><i class="bi bi-receipt fs-4"></i></div>
                 </div>
@@ -128,7 +128,7 @@
                 <div class="card-body d-flex align-items-center justify-content-between">
                     <div>
                         <div class="text-muted">Pending Orders</div>
-                        <div class="fs-2 fw-bold">{{ $stats['pending_orders'] ?? 0 }}</div>
+                        <div class="fs-2 fw-bold"><?php echo e($stats['pending_orders'] ?? 0); ?></div>
                     </div>
                     <div class="stat-icon bg-warning text-warning"><i class="bi bi-hourglass-split fs-4"></i></div>
                 </div>
@@ -140,7 +140,7 @@
                 <div class="card-body d-flex align-items-center justify-content-between">
                     <div>
                         <div class="text-muted">Completed Orders</div>
-                        <div class="fs-2 fw-bold">{{ $stats['completed_orders'] ?? 0 }}</div>
+                        <div class="fs-2 fw-bold"><?php echo e($stats['completed_orders'] ?? 0); ?></div>
                     </div>
                     <div class="stat-icon bg-success text-success"><i class="bi bi-check-circle fs-4"></i></div>
                 </div>
@@ -152,7 +152,7 @@
                 <div class="card-body d-flex align-items-center justify-content-between">
                     <div>
                         <div class="text-muted">In Stock Products</div>
-                        <div class="fs-2 fw-bold">{{ $stats['in_stock_products'] ?? 0 }}</div>
+                        <div class="fs-2 fw-bold"><?php echo e($stats['in_stock_products'] ?? 0); ?></div>
                     </div>
                     <div class="stat-icon bg-info text-info"><i class="bi bi-clipboard-check fs-4"></i></div>
                 </div>
@@ -164,7 +164,7 @@
                 <div class="card-body d-flex align-items-center justify-content-between">
                     <div>
                         <div class="text-muted">Low Stock Products (≤ 10)</div>
-                        <div class="fs-2 fw-bold">{{ $stats['low_stock_products'] ?? 0 }}</div>
+                        <div class="fs-2 fw-bold"><?php echo e($stats['low_stock_products'] ?? 0); ?></div>
                     </div>
                     <div class="stat-icon bg-warning text-warning"><i class="bi bi-exclamation-triangle fs-4"></i></div>
                 </div>
@@ -176,7 +176,7 @@
                 <div class="card-body d-flex align-items-center justify-content-between">
                     <div>
                         <div class="text-muted">Out of Stock Products</div>
-                        <div class="fs-2 fw-bold">{{ $stats['out_of_stock_products'] ?? 0 }}</div>
+                        <div class="fs-2 fw-bold"><?php echo e($stats['out_of_stock_products'] ?? 0); ?></div>
                     </div>
                     <div class="stat-icon bg-danger text-danger"><i class="bi bi-x-circle fs-4"></i></div>
                 </div>
@@ -188,7 +188,7 @@
                 <div class="card-body d-flex align-items-center justify-content-between">
                     <div>
                         <div class="text-muted">Total Revenue (Completed Orders)</div>
-                        <div class="fs-2 fw-bold">{{ $money($stats['total_revenue'] ?? 0) }}</div>
+                        <div class="fs-2 fw-bold"><?php echo e($money($stats['total_revenue'] ?? 0)); ?></div>
                     </div>
                     <div class="stat-icon bg-primary text-primary"><i class="bi bi-currency-rupee fs-4"></i></div>
                 </div>
@@ -197,7 +197,7 @@
     </div>
 
 
-    {{-- Quick Actions --}}
+    
     <div class="row mt-3">
         <div class="col-12">
             <div class="card shadow-sm">
@@ -205,16 +205,16 @@
                     <div class="d-flex align-items-center justify-content-between gap-2 flex-wrap">
                         <h5 class="mb-0">Quick Actions</h5>
                         <div class="d-flex gap-2 flex-wrap">
-                            <a href="{{ route('admin.products.create') }}" class="btn btn-primary">
+                            <a href="<?php echo e(route('admin.products.create')); ?>" class="btn btn-primary">
                                 <i class="bi bi-plus-circle me-1"></i> Add Product
                             </a>
-                            <a href="{{ route('admin.categories.create') }}" class="btn btn-outline-primary">
+                            <a href="<?php echo e(route('admin.categories.create')); ?>" class="btn btn-outline-primary">
                                 <i class="bi bi-folder-plus me-1"></i> Add Category
                             </a>
-                            <a href="{{ route('admin.orders.index') }}" class="btn btn-outline-success">
+                            <a href="<?php echo e(route('admin.orders.index')); ?>" class="btn btn-outline-success">
                                 <i class="bi bi-receipt me-1"></i> View Orders
                             </a>
-                            <a href="{{ route('admin.users.index') }}" class="btn btn-outline-secondary">
+                            <a href="<?php echo e(route('admin.users.index')); ?>" class="btn btn-outline-secondary">
                                 <i class="bi bi-people me-1"></i> View Users
                             </a>
                         </div>
@@ -224,7 +224,7 @@
         </div>
     </div>
 
-    {{-- Future chart placeholder (ready to add charts later) --}}
+    
     <div class="row mt-3 g-3">
         <div class="col-12">
             <div class="card shadow-sm">
@@ -241,7 +241,7 @@
         </div>
     </div>
 
-    {{-- Tables row --}}
+    
     <div class="row mt-3 g-3">
         <div class="col-12 col-lg-6">
             <div class="card shadow-sm">
@@ -262,23 +262,24 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                @forelse($recentOrders as $order)
+                                <?php $__empty_1 = true; $__currentLoopData = $recentOrders; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $order): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); $__empty_1 = false; ?>
                                     <tr>
-                                        <td class="fw-medium">{{ $order->id }}</td>
-                                        <td>{{ $order->customer_name ?? optional($order->user)->name ?? '—' }}</td>
-                                        <td>{{ $money($order->total ?? 0) }}</td>
+                                        <td class="fw-medium"><?php echo e($order->id); ?></td>
+                                        <td><?php echo e($order->customer_name ?? optional($order->user)->name ?? '—'); ?></td>
+                                        <td><?php echo e($money($order->total ?? 0)); ?></td>
                                         <td>
-                                            <span class="badge text-bg-{{ $statusBadgeClass($order->status ?? '') }}">
-                                                {{ $order->status }}
+                                            <span class="badge text-bg-<?php echo e($statusBadgeClass($order->status ?? '')); ?>">
+                                                <?php echo e($order->status); ?>
+
                                             </span>
                                         </td>
-                                        <td class="text-muted">{{ optional($order->created_at)->toDateTimeString() }}</td>
+                                        <td class="text-muted"><?php echo e(optional($order->created_at)->toDateTimeString()); ?></td>
                                     </tr>
-                                @empty
+                                <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); if ($__empty_1): ?>
                                     <tr>
                                         <td colspan="5" class="text-center text-muted">No recent orders</td>
                                     </tr>
-                                @endforelse
+                                <?php endif; ?>
                             </tbody>
                         </table>
                     </div>
@@ -307,40 +308,41 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                @forelse($latestProducts as $product)
+                                <?php $__empty_1 = true; $__currentLoopData = $latestProducts; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $product): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); $__empty_1 = false; ?>
                                     <tr>
                                         <td>
                                             <img
-                                                src="{{ $product->image ?: asset('images/products/placeholder-100x100.png') }}"
-                                                alt="{{ $product->name }}"
+                                                src="<?php echo e($product->image ?: asset('images/products/placeholder-100x100.png')); ?>"
+                                                alt="<?php echo e($product->name); ?>"
                                                 style="width:52px; height:52px; object-fit:cover; border-radius:12px; border:1px solid rgba(0,0,0,0.1);"
-                                                onerror="this.src='{{ asset('images/products/placeholder-100x100.png') }}'"
+                                                onerror="this.src='<?php echo e(asset('images/products/placeholder-100x100.png')); ?>'"
                                             >
                                         </td>
-                                        <td class="fw-medium">{{ $product->name }}</td>
-                                        <td class="text-muted">{{ $product->category?->name ?? '—' }}</td>
-                                        <td class="text-muted">{{ $product->brand?->name ?? '—' }}</td>
-                                        <td>{{ '₹' . number_format((float)($product->price ?? 0), 2) }}</td>
+                                        <td class="fw-medium"><?php echo e($product->name); ?></td>
+                                        <td class="text-muted"><?php echo e($product->category?->name ?? '—'); ?></td>
+                                        <td class="text-muted"><?php echo e($product->brand?->name ?? '—'); ?></td>
+                                        <td><?php echo e('₹' . number_format((float)($product->price ?? 0), 2)); ?></td>
                                         <td>
-                                            @if((int)($product->stock ?? 0) === 0)
+                                            <?php if((int)($product->stock ?? 0) === 0): ?>
                                                 <span class="text-danger fw-semibold">0</span>
-                                            @elseif((int)($product->stock ?? 0) <= 10)
-                                                <span class="text-warning fw-semibold">{{ (int)$product->stock }}</span>
-                                            @else
-                                                <span class="text-success fw-semibold">{{ (int)$product->stock }}</span>
-                                            @endif
+                                            <?php elseif((int)($product->stock ?? 0) <= 10): ?>
+                                                <span class="text-warning fw-semibold"><?php echo e((int)$product->stock); ?></span>
+                                            <?php else: ?>
+                                                <span class="text-success fw-semibold"><?php echo e((int)$product->stock); ?></span>
+                                            <?php endif; ?>
                                         </td>
                                         <td>
-                                            <span class="badge text-bg-{{ ($product->status ?? '') === 'active' ? 'success' : 'secondary' }}">
-                                                {{ $product->status ?? '—' }}
+                                            <span class="badge text-bg-<?php echo e(($product->status ?? '') === 'active' ? 'success' : 'secondary'); ?>">
+                                                <?php echo e($product->status ?? '—'); ?>
+
                                             </span>
                                         </td>
                                     </tr>
-                                @empty
+                                <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); if ($__empty_1): ?>
                                     <tr>
                                         <td colspan="7" class="text-center text-muted">No products found</td>
                                     </tr>
-                                @endforelse
+                                <?php endif; ?>
                             </tbody>
                         </table>
                     </div>
@@ -369,38 +371,40 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                @forelse($lowStockProducts as $product)
-                                    @php
+                                <?php $__empty_1 = true; $__currentLoopData = $lowStockProducts; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $product): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); $__empty_1 = false; ?>
+                                    <?php
                                         $stock = (int)($product->stock ?? 0);
                                         $isOut = $stock === 0;
                                         $rowClass = $isOut ? 'table-danger' : 'table-warning';
-                                    @endphp
-                                    <tr class="{{ $rowClass }}">
+                                    ?>
+                                    <tr class="<?php echo e($rowClass); ?>">
 
                                         <td class="fw-medium">
-                                            {{ $product->name }}
+                                            <?php echo e($product->name); ?>
+
                                         </td>
-                                        <td class="text-muted">{{ $product->category?->name ?? '—' }}</td>
-                                        <td class="text-muted">{{ $product->brand?->name ?? '—' }}</td>
-                                        <td>{{ '₹' . number_format((float)($product->price ?? 0), 2) }}</td>
+                                        <td class="text-muted"><?php echo e($product->category?->name ?? '—'); ?></td>
+                                        <td class="text-muted"><?php echo e($product->brand?->name ?? '—'); ?></td>
+                                        <td><?php echo e('₹' . number_format((float)($product->price ?? 0), 2)); ?></td>
                                         <td class="fw-semibold">
-                                            @if($isOut)
+                                            <?php if($isOut): ?>
                                                 <span class="text-danger">0</span>
-                                            @else
-                                                <span class="text-warning">{{ (int)$product->stock }}</span>
-                                            @endif
+                                            <?php else: ?>
+                                                <span class="text-warning"><?php echo e((int)$product->stock); ?></span>
+                                            <?php endif; ?>
                                         </td>
                                         <td>
-                                            <span class="badge text-bg-{{ ($product->status ?? '') === 'active' ? 'success' : 'secondary' }}">
-                                                {{ $product->status ?? '—' }}
+                                            <span class="badge text-bg-<?php echo e(($product->status ?? '') === 'active' ? 'success' : 'secondary'); ?>">
+                                                <?php echo e($product->status ?? '—'); ?>
+
                                             </span>
                                         </td>
                                     </tr>
-                                @empty
+                                <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); if ($__empty_1): ?>
                                     <tr>
                                         <td colspan="6" class="text-center text-muted">No low stock products</td>
                                     </tr>
-                                @endforelse
+                                <?php endif; ?>
                             </tbody>
                         </table>
                     </div>
@@ -410,9 +414,11 @@
         </div>
     </div>
 
-@endsection
+<?php $__env->stopSection(); ?>
 
-@section('scripts')
-    {{-- Future: charts JS hook lives here --}}
-@endsection
+<?php $__env->startSection('scripts'); ?>
+    
+<?php $__env->stopSection(); ?>
 
+
+<?php echo $__env->make('admin.layouts.admin', array_diff_key(get_defined_vars(), ['__data' => 1, '__path' => 1]))->render(); ?><?php /**PATH C:\Users\CHANTHY.CHET\Desktop\Full Stack E-Commerce System\ecommerce-backend\resources\views/admin/dashboard.blade.php ENDPATH**/ ?>

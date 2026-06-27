@@ -21,7 +21,7 @@
 
     <div class="card shadow-sm">
         <div class="card-body">
-            <form method="POST" action="{{ route('admin.products.store') }}" enctype="multipart/form-data">
+            <form method="POST" action="{{ route('admin.products.store') }}">
                 @csrf
 
                 <div class="mb-3">
@@ -58,21 +58,32 @@
                 </div>
 
                 <div class="mb-3">
-                    <label class="form-label">Image Upload</label>
-                    <input type="file" name="image_file" class="form-control" accept="image/*" id="imageFile">
-                    <div class="form-text">Upload JPG, PNG, or WebP (max 2MB).</div>
+                    <label class="form-label">Image URL</label>
+                    <input type="url" name="image" class="form-control" placeholder="https://example.com/image.jpg" id="imageUrl" value="{{ old('image') }}" required>
+                    <div class="form-text">Enter a valid image URL (https://...).</div>
                 </div>
 
                 <div class="mb-3">
-                    <label class="form-label">Image URL</label>
-                    <input type="url" name="image_url" class="form-control" placeholder="https://example.com/image.jpg" id="imageUrl">
-                    <div class="form-text">Or paste a direct link to an image. Leave both empty to skip.</div>
+                    <label class="form-label">Live Preview (100×100)</label>
+                    <div>
+                        <img
+                            id="imagePreview"
+                            src="{{ asset('images/products/placeholder-100x100.png') }}"
+                            alt="Image preview"
+                            style="width: 100px; height: 100px; object-fit: cover; border-radius: 12px; border: 1px solid rgba(0,0,0,0.1);"
+                            onerror="this.src='{{ asset('images/products/placeholder-100x100.png') }}'"
+                        >
+                    </div>
                 </div>
+
 
                 <button type="submit" class="btn btn-primary">Create</button>
                 <a href="{{ route('admin.products.index') }}" class="btn btn-outline-secondary">Back</a>
             </form>
         </div>
     </div>
-@endsection
+@push('scripts')
+    <script src="{{ asset('js/admin/product-image-preview.js') }}"></script>
+@endpush
 
+@endsection

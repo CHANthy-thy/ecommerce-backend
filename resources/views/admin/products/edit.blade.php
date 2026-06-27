@@ -21,7 +21,7 @@
 
     <div class="card shadow-sm">
         <div class="card-body">
-            <form method="POST" action="{{ route('admin.products.update', $product) }}" enctype="multipart/form-data">
+            <form method="POST" action="{{ route('admin.products.update', $product) }}">
                 @csrf
                 @method('PUT')
 
@@ -60,26 +60,32 @@
 
                 <div class="mb-3">
                     <label class="form-label">Current Image</label>
-                    @if (!empty($product->image))
-                        <div class="mb-2">
-                            <img src="{{ asset('storage/'.$product->image) }}" alt="Product image" style="max-width: 220px; border-radius: 8px; border: 1px solid rgba(0,0,0,0.1);">
-                        </div>
-                    @else
-                        <p class="text-muted mb-2">No image uploaded.</p>
-                    @endif
+                    <div class="mb-2">
+                        @php
+                            $currentImageUrl = $product->image ?: asset('images/products/placeholder-100x100.png');
+                        @endphp
+                        <img
+                            id="imagePreview"
+                            src="{{ $currentImageUrl }}"
+                            alt="Product image"
+                            style="max-width: 220px; border-radius: 12px; border: 1px solid rgba(0,0,0,0.1); object-fit: cover;"
+                            onerror="this.src='{{ asset('images/products/placeholder-100x100.png') }}'"
+                        >
+                    </div>
 
-                    <label class="form-label mt-3">Change Image — Upload File (optional)</label>
-                    <input type="file" name="image_file" class="form-control" accept="image/*" id="imageFile">
-                    <div class="form-text">Leave file empty and image URL empty to keep the current image.</div>
-
-                    <label class="form-label mt-3">Or Paste Image URL</label>
-                    <input type="url" name="image_url" class="form-control" placeholder="https://example.com/image.jpg" id="imageUrl" value="{{ old('image_url') }}">
+                    <label class="form-label">Image URL</label>
+                    <input type="url" name="image" class="form-control" placeholder="https://example.com/image.jpg" id="imageUrl" value="{{ old('image', $product->image) }}" required>
+                    <div class="form-text">Enter a valid image URL (https://...).</div>
                 </div>
+
 
                 <button type="submit" class="btn btn-primary">Save Changes</button>
                 <a href="{{ route('admin.products.index') }}" class="btn btn-outline-secondary">Back</a>
             </form>
         </div>
     </div>
-@endsection
+@push('scripts')
+    <script src="{{ asset('js/admin/product-image-preview.js') }}"></script>
+@endpush
 
+@endsection
