@@ -7,9 +7,6 @@ use Illuminate\Http\Resources\Json\JsonResource;
 
 class WishlistResource extends JsonResource
 {
-    /** @var Wishlist */
-    public $resource;
-
     public function toArray($request): array
     {
         return [
@@ -18,7 +15,15 @@ class WishlistResource extends JsonResource
             'product_id' => $this->product_id,
             'created_at' => optional($this->created_at)->toISOString(),
             'updated_at' => optional($this->updated_at)->toISOString(),
-            'product' => $this->whenLoaded('product'),
+            'product' => $this->whenLoaded('product', function () {
+                return [
+                    'id' => $this->product->id,
+                    'name' => $this->product->name,
+                    'price' => $this->product->price,
+                    'rating' => $this->product->rating ?? 0,
+                    'image_url' => $this->product->image ?? null,
+                ];
+            }),
         ];
     }
 }

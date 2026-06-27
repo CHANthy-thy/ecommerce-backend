@@ -24,7 +24,9 @@ class ProductResource extends JsonResource
             'description' => $this->description,
             'price' => $this->price,
             'stock' => $this->stock,
-            'image' => $this->image ?: null,
+            'image' => $this->image,
+            'image_url' => $this->image ? asset('storage/' . $this->image) : null,
+            'rating' => $this->rating ?? 0,
             'created_at' => optional($this->created_at)->toISOString(),
             'updated_at' => optional($this->updated_at)->toISOString(),
         ];

@@ -10,14 +10,13 @@ use App\Http\Controllers\Api\CheckoutController;
 use App\Http\Controllers\Api\ReviewController;
 
 Route::post('/register', [AuthController::class, 'register']);
-
 Route::post('/login', [AuthController::class, 'login']);
 
 Route::middleware('auth:sanctum')->post('/logout', [AuthController::class, 'logout']);
+Route::middleware('auth:sanctum')->get('/user', [AuthController::class, 'user']);
 Route::middleware('auth:sanctum')->get('/profile', [AuthController::class, 'profile']);
 Route::middleware('auth:sanctum')->put('/profile', [AuthController::class, 'updateProfile']);
 Route::middleware('auth:sanctum')->put('/change-password', [AuthController::class, 'changePassword']);
-
 
 
 Route::get('/categories', [ApiCategoryController::class, 'index']);

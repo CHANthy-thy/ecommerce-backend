@@ -13,6 +13,7 @@ class Order extends Model
 
     protected $fillable = [
         'user_id',
+        'order_number',
         'status',
         'subtotal',
         'total',
@@ -25,6 +26,15 @@ class Order extends Model
         'total' => 'decimal:2',
     ];
 
+    protected static function booted(): void
+    {
+        static::creating(function (self $order) {
+            if (empty($order->order_number)) {
+                $order->order_number = 'SC-' . random_int(100000, 999999);
+            }
+        });
+    }
+
     public function user(): BelongsTo
     {
         return $this->belongsTo(User::class);
@@ -35,7 +45,6 @@ class Order extends Model
         return $this->hasMany(OrderItem::class);
     }
 
-    // Optional: keep snapshot ordering stable
     public function itemsOrdered()
     {
         return $this->items()->orderByDesc('id');

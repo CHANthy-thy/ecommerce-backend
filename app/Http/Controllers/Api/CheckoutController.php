@@ -107,6 +107,7 @@ class CheckoutController extends Controller
             return response()->json([
                 'message' => 'Checkout successful',
                 'data' => [
+                    'order_number' => $order->order_number,
                     'order' => [
                         'id' => $order->id,
                         'user_id' => $order->user_id,

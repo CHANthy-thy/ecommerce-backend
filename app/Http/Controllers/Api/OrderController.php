@@ -22,8 +22,8 @@ class OrderController extends Controller
             'data' => $orders->map(function (Order $order) {
                 return [
                     'id' => $order->id,
+                    'order_number' => $order->order_number,
                     'status' => $order->status,
-                    'subtotal' => $order->subtotal,
                     'total' => $order->total,
                     'shipping_address' => $order->shipping_address,
                     'created_at' => optional($order->created_at)->toISOString(),
@@ -31,10 +31,9 @@ class OrderController extends Controller
                         return [
                             'id' => $item->id,
                             'product_id' => $item->product_id,
-                            'product_name' => $item->product_name,
-                            'unit_price' => $item->unit_price,
+                            'name' => $item->product_name,
+                            'price' => $item->unit_price,
                             'quantity' => $item->quantity,
-                            'line_total' => $item->line_total,
                         ];
                     }),
                 ];
@@ -53,8 +52,8 @@ class OrderController extends Controller
             'message' => 'Order fetched successfully',
             'data' => [
                 'id' => $order->id,
+                'order_number' => $order->order_number,
                 'status' => $order->status,
-                'subtotal' => $order->subtotal,
                 'total' => $order->total,
                 'shipping_address' => $order->shipping_address,
                 'created_at' => optional($order->created_at)->toISOString(),
@@ -62,10 +61,9 @@ class OrderController extends Controller
                     return [
                         'id' => $item->id,
                         'product_id' => $item->product_id,
-                        'product_name' => $item->product_name,
-                        'unit_price' => $item->unit_price,
+                        'name' => $item->product_name,
+                        'price' => $item->unit_price,
                         'quantity' => $item->quantity,
-                        'line_total' => $item->line_total,
                     ];
                 }),
             ],
