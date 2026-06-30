@@ -26,7 +26,7 @@ class CheckoutController extends Controller
     public function store(Request $request): \Illuminate\Http\JsonResponse
     {
         $validated = $request->validate([
-            'shipping_address' => ['sometimes', 'array'],
+            'shipping_address' => ['sometimes', 'string', 'max:255'],
             'payment_method' => ['sometimes', 'string', 'max:50'],
             // optional fields; exam may not require them
         ]);
@@ -67,8 +67,8 @@ class CheckoutController extends Controller
             $order = Order::create([
                 'user_id' => $request->user()->id,
                 'status' => 'pending',
-                'subtotal' => 0,
-                'total' => 0,
+            'subtotal' => 0,
+            'total' => 0,
                 'shipping_address' => $validated['shipping_address'] ?? null,
             ]);
 

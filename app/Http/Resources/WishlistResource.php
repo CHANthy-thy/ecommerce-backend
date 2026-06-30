@@ -7,6 +7,12 @@ use Illuminate\Http\Resources\Json\JsonResource;
 
 class WishlistResource extends JsonResource
 {
+    private static function resolveImageUrl(?string $raw): ?string
+    {
+        if (! $raw) return null;
+        return filter_var($raw, FILTER_VALIDATE_URL) ? $raw : asset('storage/' . $raw);
+    }
+
     public function toArray($request): array
     {
         return [
@@ -21,7 +27,8 @@ class WishlistResource extends JsonResource
                     'name' => $this->product->name,
                     'price' => $this->product->price,
                     'rating' => $this->product->rating ?? 0,
-                    'image_url' => $this->product->image ?? null,
+                    'image' => self::resolveImageUrl($this->product->image ?? $this->product->image_url),
+                    'image_url' => self::resolveImageUrl($this->product->image_url ?? $this->product->image),
                 ];
             }),
         ];

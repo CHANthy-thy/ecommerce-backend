@@ -19,7 +19,15 @@ Route::middleware('auth:sanctum')->put('/profile', [AuthController::class, 'upda
 Route::middleware('auth:sanctum')->put('/change-password', [AuthController::class, 'changePassword']);
 
 
+Route::get('/ping', function () {
+    return response()->json([
+        'success' => true,
+        'message' => 'pong',
+    ]);
+});
+
 Route::get('/categories', [ApiCategoryController::class, 'index']);
+
 
 
 Route::get('/products', [ApiProductController::class, 'index']);

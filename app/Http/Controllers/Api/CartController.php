@@ -14,6 +14,12 @@ use Symfony\Component\HttpFoundation\Response;
 
 class CartController extends Controller
 {
+    private static function resolveImage(?string $raw): ?string
+    {
+        if (! $raw) return null;
+        return filter_var($raw, FILTER_VALIDATE_URL) ? $raw : asset('storage/' . $raw);
+    }
+
     private function getCartForRequest(Request $request): Cart
     {
         /** @var \App\Models\User $user */
@@ -44,7 +50,9 @@ class CartController extends Controller
                     'description' => $item->product->description,
                     'price' => $item->product->price,
                     'stock' => $item->product->stock,
-                    'image' => $item->product->image ? asset('storage/' . $item->product->image) : null,
+                    'image' => $this->resolveImage($item->product->image ?? $item->product->image_url),
+                    'image_url' => $this->resolveImage($item->product->image_url ?? $item->product->image),
+                    'rating' => $item->product->rating ?? 0,
                     'category' => $item->product->category ? [
                         'id' => $item->product->category->id,
                         'name' => $item->product->category->name,

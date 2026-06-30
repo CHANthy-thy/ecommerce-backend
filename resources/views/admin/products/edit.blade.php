@@ -21,7 +21,8 @@
 
     <div class="card shadow-sm">
         <div class="card-body">
-            <form method="POST" action="{{ route('admin.products.update', $product) }}">
+            <form method="POST" action="{{ route('admin.products.update', $product) }}" enctype="multipart/form-data">
+
                 @csrf
                 @method('PUT')
 
@@ -32,6 +33,18 @@
                         @foreach ($categories as $category)
                             <option value="{{ $category->id }}" {{ (int)old('category_id', $product->category_id) === $category->id ? 'selected' : '' }}>
                                 {{ $category->name }}
+                            </option>
+                        @endforeach
+                    </select>
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label">Brand</label>
+                    <select name="brand_id" class="form-select">
+                        <option value="">-- Select Brand --</option>
+                        @foreach ($brands as $brand)
+                            <option value="{{ $brand->id }}" {{ (int)old('brand_id', $product->brand_id) === $brand->id ? 'selected' : '' }}>
+                                {{ $brand->name }}
                             </option>
                         @endforeach
                     </select>
@@ -58,11 +71,36 @@
                     </div>
                 </div>
 
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label">Skin Type</label>
+                        <input type="text" name="skin_type" value="{{ old('skin_type', $product->skin_type) }}" class="form-control" placeholder="e.g., normal, dry">
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label">Volume</label>
+                        <input type="text" name="volume" value="{{ old('volume', $product->volume) }}" class="form-control" placeholder="e.g., 150ml">
+                    </div>
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label">Ingredients</label>
+                    <textarea name="ingredients" class="form-control" rows="2">{{ old('ingredients', $product->ingredients) }}</textarea>
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label">Status</label>
+                    <select name="status" class="form-select">
+                        <option value="active" {{ old('status', $product->status) == 'active' ? 'selected' : '' }}>Active</option>
+                        <option value="inactive" {{ old('status', $product->status) == 'inactive' ? 'selected' : '' }}>Inactive</option>
+                        <option value="archived" {{ old('status', $product->status) == 'archived' ? 'selected' : '' }}>Archived</option>
+                    </select>
+                </div>
+
                 <div class="mb-3">
                     <label class="form-label">Current Image</label>
                     <div class="mb-2">
                         @php
-                            $currentImageUrl = $product->image ?: asset('images/products/placeholder-100x100.png');
+                            $currentImageUrl = $product->image_url ?: ($product->image ? asset('storage/' . $product->image) : asset('images/products/placeholder-100x100.png'));
                         @endphp
                         <img
                             id="imagePreview"
@@ -73,9 +111,26 @@
                         >
                     </div>
 
-                    <label class="form-label">Image URL</label>
-                    <input type="url" name="image" class="form-control" placeholder="https://example.com/image.jpg" id="imageUrl" value="{{ old('image', $product->image) }}" required>
-                    <div class="form-text">Enter a valid image URL (https://...).</div>
+                    <label class="form-label mt-3">Replace image (choose one)</label>
+
+                    <div class="p-3 mb-3 rounded-3" style="border: 1px dashed rgba(0,0,0,0.15); background: rgba(0,0,0,0.02);">
+                        <div class="form-check mb-2">
+                            <input class="form-check-input" type="radio" name="image_source" id="imageSourceFile" value="file" checked>
+                            <label class="form-check-label" for="imageSourceFile">Upload file</label>
+                        </div>
+                        <input type="file" name="image" class="form-control" accept="image/*">
+                        <div class="form-text">Leave empty to keep the existing image.</div>
+                    </div>
+
+                    <div class="p-3 rounded-3" style="border: 1px dashed rgba(0,0,0,0.15); background: rgba(0,0,0,0.02);">
+                        <div class="form-check mb-2">
+                            <input class="form-check-input" type="radio" name="image_source" id="imageSourceUrl" value="url">
+                            <label class="form-check-label" for="imageSourceUrl">Paste image URL</label>
+                        </div>
+
+                        <input type="text" name="image_url" class="form-control" placeholder="https://example.com/image.jpg" id="imageUrl" value="{{ old('image_url', $product->image_url) }}">
+                        <div class="form-text">Leave empty to keep the existing image.</div>
+                    </div>
                 </div>
 
 

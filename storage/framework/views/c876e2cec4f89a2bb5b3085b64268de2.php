@@ -29,12 +29,13 @@
                     <tbody>
                         <?php $__empty_1 = true; $__currentLoopData = $products; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $product): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); $__empty_1 = false; ?>
                             <tr>
-                                <td>
+<td>
                                     <?php
-                                        $imgSrc = $product->image ?: asset('images/products/placeholder-100x100.png');
+                                        $imgSrc = $product->image_url ?: ($product->image ? asset('storage/' . $product->image) : asset('images/products/placeholder-100x100.png'));
+                                        $imgLink = $product->image_url ?: $product->image;
                                     ?>
-                                    <?php if($product->image): ?>
-                                        <a href="<?php echo e($product->image); ?>" target="_blank" rel="noopener noreferrer">
+                                    <?php if($imgLink): ?>
+                                        <a href="<?php echo e($imgLink); ?>" target="_blank" rel="noopener noreferrer">
                                     <?php endif; ?>
                                         <img
                                             src="<?php echo e($imgSrc); ?>"
@@ -43,7 +44,7 @@
                                             loading="lazy"
                                             onerror="this.src='<?php echo e(asset('images/products/placeholder-100x100.png')); ?>'"
                                         >
-                                    <?php if($product->image): ?>
+                                    <?php if($imgLink): ?>
                                         </a>
                                     <?php endif; ?>
                                 </td>

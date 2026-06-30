@@ -63,6 +63,38 @@ class AdminDashboardController extends Controller
             ->orderByDesc('stock')
             ->get();
 
+        $dashboardData['today_revenue'] = (float) Order::query()
+            ->where('status', 'completed')
+            ->whereDate('created_at', today())
+            ->sum('total');
+
+        $dashboardData['month_revenue'] = (float) Order::query()
+            ->where('status', 'completed')
+            ->whereMonth('created_at', now()->month)
+            ->whereYear('created_at', now()->year)
+            ->sum('total');
+
+        $dashboardData['paymentStatus'] = [
+            'paid' => Order::query()->where('status', 'completed')->count(),
+            'pending' => Order::query()->where('status', 'pending')->count(),
+            'failed' => Order::query()->where('status', 'failed')->count(),
+        ];
+
+        $monthlyRaw = Order::query()
+            ->selectRaw('MONTH(created_at) as month, SUM(total) as revenue')
+            ->where('status', 'completed')
+            ->whereYear('created_at', now()->year)
+            ->groupBy('month')
+            ->orderBy('month')
+            ->pluck('revenue', 'month')
+            ->toArray();
+
+        $monthlySales = [];
+        for ($m = 1; $m <= 12; $m++) {
+            $monthlySales[] = (float) ($monthlyRaw[$m] ?? 0);
+        }
+        $dashboardData['monthlySales'] = $monthlySales;
+
         return view('admin.dashboard', $dashboardData);
     }
 }

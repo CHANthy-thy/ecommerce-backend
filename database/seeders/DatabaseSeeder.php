@@ -27,7 +27,7 @@ class DatabaseSeeder extends Seeder
         );
 
 
-        // Skincare sample data
+        // Existing seeders (kept as-is)
         $this->call([
             CategorySeeder::class,
             BrandSeeder::class,
@@ -39,6 +39,11 @@ class DatabaseSeeder extends Seeder
             SkincareSanitySeeder::class,
         ]);
 
+        // Admin dashboard highly-synchronized dataset for UI metrics/tables.
+        // This seeder resets Products + Orders so the dashboard counters and tables are consistent.
+        $this->call([
+            AdminDashboardSeeder::class,
+        ]);
 
     }
 }

@@ -7,6 +7,12 @@ use Illuminate\Http\Resources\Json\JsonResource;
 
 class CategoryResource extends JsonResource
 {
+    private static function resolveImg(?string $raw): ?string
+    {
+        if (! $raw) return null;
+        return filter_var($raw, FILTER_VALIDATE_URL) ? $raw : asset('storage/' . $raw);
+    }
+
     /** @var Category */
     public $resource;
 
@@ -26,7 +32,7 @@ class CategoryResource extends JsonResource
                     'description' => $product->description,
                     'price' => $product->price,
                     'stock' => $product->stock,
-                    'image' => $product->image ? asset('storage/' . $product->image) : null,
+                    'image' => self::resolveImg($product->image_url ?? $product->image),
                     'created_at' => optional($product->created_at)->toISOString(),
                     'updated_at' => optional($product->updated_at)->toISOString(),
                 ]);

@@ -31,12 +31,13 @@
                     <tbody>
                         @forelse ($products as $product)
                             <tr>
-                                <td>
+<td>
                                     @php
-                                        $imgSrc = $product->image ?: asset('images/products/placeholder-100x100.png');
+                                        $imgSrc = $product->image_url ?: ($product->image ? asset('storage/' . $product->image) : asset('images/products/placeholder-100x100.png'));
+                                        $imgLink = $product->image_url ?: $product->image;
                                     @endphp
-                                    @if ($product->image)
-                                        <a href="{{ $product->image }}" target="_blank" rel="noopener noreferrer">
+                                    @if ($imgLink)
+                                        <a href="{{ $imgLink }}" target="_blank" rel="noopener noreferrer">
                                     @endif
                                         <img
                                             src="{{ $imgSrc }}"
@@ -45,7 +46,7 @@
                                             loading="lazy"
                                             onerror="this.src='{{ asset('images/products/placeholder-100x100.png') }}'"
                                         >
-                                    @if ($product->image)
+                                    @if ($imgLink)
                                         </a>
                                     @endif
                                 </td>

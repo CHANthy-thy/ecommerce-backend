@@ -1,0 +1,54 @@
+{
+  "id": "ecommerce-api-env",
+  "name": "E-Commerce API Environment",
+  "values": [
+    {
+      "key": "baseUrl",
+      "value": "http://localhost:8000/api",
+      "type": "default",
+      "enabled": true
+    },
+    {
+      "key": "token",
+      "value": "",
+      "type": "default",
+      "enabled": true
+    },
+    {
+      "key": "productId",
+      "value": "1",
+      "type": "default",
+      "enabled": true
+    },
+    {
+      "key": "orderId",
+      "value": "1",
+      "type": "default",
+      "enabled": true
+    },
+    {
+      "key": "reviewId",
+      "value": "1",
+      "type": "default",
+      "enabled": true
+    },
+    {
+      "key": "wishlistId",
+      "value": "1",
+      "type": "default",
+      "enabled": true
+    },
+    {
+      "key": "cartProductId",
+      "value": "1",
+      "type": "default",
+      "enabled": true
+    },
+    {
+      "key": "userId",
+      "value": "1",
+      "type": "default",
+      "enabled": true
+    }
+  ]
+}

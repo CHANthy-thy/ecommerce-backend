@@ -39,17 +39,16 @@
 
 
 @php
-        // Controller passes $dashboardData; keep local fallbacks for robustness.
-        $stats = $dashboardData['stats'] ?? [];
-        $recentOrders = $dashboardData['recentOrders'] ?? [];
-        $latestProducts = $dashboardData['latestProducts'] ?? [];
-        $lowStockProducts = $dashboardData['lowStockProducts'] ?? [];
+        $stats = $stats ?? [];
+        $recentOrders = $recentOrders ?? collect();
+        $latestProducts = $latestProducts ?? collect();
+        $lowStockProducts = $lowStockProducts ?? collect();
 
 
         // Number formatting helpers
         $money = function ($value) {
             $v = is_numeric($value) ? (float) $value : 0.0;
-            return '₹' . number_format($v, 2);
+            return '$' . number_format($v, 2);
         };
 
         $statusBadgeClass = function ($status) {
@@ -224,17 +223,77 @@
         </div>
     </div>
 
-    {{-- Future chart placeholder (ready to add charts later) --}}
+    {{-- Analytics section --}}
     <div class="row mt-3 g-3">
         <div class="col-12">
             <div class="card shadow-sm">
                 <div class="card-body">
-                    <div class="d-flex align-items-center justify-content-between mb-2">
-                        <h5 class="card-title mb-0">Analytics (Future Charts)</h5>
-                        <span class="text-muted small">Charts can be added here later</span>
+                    <div class="d-flex align-items-center justify-content-between mb-3">
+                        <h5 class="card-title mb-0">Analytics</h5>
                     </div>
-                    <div class="chart-placeholder d-flex align-items-center justify-content-center text-muted">
-                        <i class="bi bi-graph-up fs-1"></i>
+
+                    <div class="row g-3 mb-4">
+                        <div class="col-12 col-sm-6 col-lg-3">
+                            <div class="card shadow-sm h-100 stat-card">
+                                <div class="card-body d-flex align-items-center justify-content-between">
+                                    <div>
+                                        <div class="text-muted">Today's Revenue</div>
+                                        <div class="fs-2 fw-bold">{{ $money($today_revenue ?? 0) }}</div>
+                                    </div>
+                                    <div class="stat-icon bg-primary text-primary"><i class="bi bi-calendar-day fs-4"></i></div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-12 col-sm-6 col-lg-3">
+                            <div class="card shadow-sm h-100 stat-card">
+                                <div class="card-body d-flex align-items-center justify-content-between">
+                                    <div>
+                                        <div class="text-muted">This Month Revenue (Monthly Sales)</div>
+                                        <div class="fs-2 fw-bold">{{ $money($month_revenue ?? 0) }}</div>
+                                    </div>
+                                    <div class="stat-icon bg-success text-success"><i class="bi bi-calendar-month fs-4"></i></div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-12 col-sm-6 col-lg-3">
+                            <div class="card shadow-sm h-100 stat-card">
+                                <div class="card-body">
+                                    <div class="text-muted">Payment Status</div>
+                                    <div class="d-flex gap-3 mt-2">
+                                        <div>
+                                            <span class="badge text-bg-success">Paid</span>
+                                            <span class="fw-semibold">{{ $paymentStatus['paid'] ?? 0 }}</span>
+                                        </div>
+                                        <div>
+                                            <span class="badge text-bg-warning">Pending</span>
+                                            <span class="fw-semibold">{{ $paymentStatus['pending'] ?? 0 }}</span>
+                                        </div>
+                                        <div>
+                                            <span class="badge text-bg-danger">Failed</span>
+                                            <span class="fw-semibold">{{ $paymentStatus['failed'] ?? 0 }}</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-12 col-sm-6 col-lg-3">
+                            <div class="card shadow-sm h-100 stat-card">
+                                <div class="card-body d-flex align-items-center justify-content-between">
+                                    <div>
+                                        <div class="text-muted">Current Year</div>
+                                        <div class="fs-2 fw-bold">{{ date('Y') }}</div>
+                                    </div>
+                                    <div class="stat-icon bg-info text-info"><i class="bi bi-graph-up fs-4"></i></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="chart-container" style="position: relative; height: 320px; width: 100%;">
+                        <canvas id="monthlySalesChart"></canvas>
                     </div>
                 </div>
             </div>
@@ -311,7 +370,7 @@
                                     <tr>
                                         <td>
                                             <img
-                                                src="{{ $product->image ?: asset('images/products/placeholder-100x100.png') }}"
+                                                src="{{ $product->image_url ?: ($product->image ? asset('storage/' . $product->image) : asset('images/products/placeholder-100x100.png')) }}"
                                                 alt="{{ $product->name }}"
                                                 style="width:52px; height:52px; object-fit:cover; border-radius:12px; border:1px solid rgba(0,0,0,0.1);"
                                                 onerror="this.src='{{ asset('images/products/placeholder-100x100.png') }}'"
@@ -320,7 +379,7 @@
                                         <td class="fw-medium">{{ $product->name }}</td>
                                         <td class="text-muted">{{ $product->category?->name ?? '—' }}</td>
                                         <td class="text-muted">{{ $product->brand?->name ?? '—' }}</td>
-                                        <td>{{ '₹' . number_format((float)($product->price ?? 0), 2) }}</td>
+                                        <td>{{ '$' . number_format((float)($product->price ?? 0), 2) }}</td>
                                         <td>
                                             @if((int)($product->stock ?? 0) === 0)
                                                 <span class="text-danger fw-semibold">0</span>
@@ -382,7 +441,7 @@
                                         </td>
                                         <td class="text-muted">{{ $product->category?->name ?? '—' }}</td>
                                         <td class="text-muted">{{ $product->brand?->name ?? '—' }}</td>
-                                        <td>{{ '₹' . number_format((float)($product->price ?? 0), 2) }}</td>
+                                        <td>{{ '$' . number_format((float)($product->price ?? 0), 2) }}</td>
                                         <td class="fw-semibold">
                                             @if($isOut)
                                                 <span class="text-danger">0</span>
@@ -413,6 +472,57 @@
 @endsection
 
 @section('scripts')
-    {{-- Future: charts JS hook lives here --}}
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.4/dist/chart.umd.min.js"></script>
+    <script>
+        (function() {
+            const labels = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+            const salesData = @json($monthlySales ?? array_fill(0, 12, 0));
+
+            const ctx = document.getElementById('monthlySalesChart');
+            if (!ctx) return;
+
+            new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        label: 'Monthly Sales',
+                        data: salesData,
+                        borderColor: '#0d6efd',
+                        backgroundColor: 'rgba(13, 110, 253, 0.10)',
+                        borderWidth: 2,
+                        fill: true,
+                        tension: 0.3,
+                        pointRadius: 4,
+                        pointHoverRadius: 6,
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { display: false },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    return '$' + new Intl.NumberFormat('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 }).format(context.parsed.y);
+                                }
+                            }
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            ticks: {
+                                callback: function(value) {
+                                    return '$' + new Intl.NumberFormat('en-IN').format(value);
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+        })();
+    </script>
 @endsection
 

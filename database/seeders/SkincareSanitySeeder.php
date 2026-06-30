@@ -24,7 +24,7 @@ class SkincareSanitySeeder extends Seeder
         // Remove placeholder sample images only if they were created in an earlier dataset.
         // Current ProductSeeder uses example.com images, but we do NOT want to delete all
         // products because it breaks the demo dataset.
-        // Product::query()->where('image', 'like', '%example.com%')->delete();
+        // Product::query()->where('image_url', 'like', '%example.com%')->delete();
 
 
         // Pruning unused brands breaks the demo dataset if products were not seeded

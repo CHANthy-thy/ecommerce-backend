@@ -18,6 +18,7 @@ class Product extends Model
         'price',
         'stock',
         'image',
+        'image_url',
         'skin_type',
         'volume',
         'ingredients',
@@ -49,6 +50,3 @@ class Product extends Model
         return $this->hasMany(Review::class);
     }
 }
-
-
-

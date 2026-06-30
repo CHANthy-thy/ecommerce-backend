@@ -31,6 +31,19 @@ class ProductSeeder extends Seeder
         // Exactly 50 skincare products.
         // Fields required by schema:
         // - slug, brand_id, skin_type, volume, ingredients, status
+        $imageMap = [
+            'Cleanser' => 'https://images.unsplash.com/photo-1556228578-4b2b3b7d6e7a?w=900&q=80&auto=format&fit=crop',
+            'Toner' => 'https://images.unsplash.com/photo-1585232351009-eebafc5b2d0f?w=900&q=80&auto=format&fit=crop',
+            'Serum' => 'https://images.unsplash.com/photo-1587300003388-49208cc962cb?w=900&q=80&auto=format&fit=crop',
+            'Moisturizer' => 'https://images.unsplash.com/photo-1612818040148-46a0f0b0d2e4?w=900&q=80&auto=format&fit=crop',
+            'Sunscreen' => 'https://images.unsplash.com/photo-1522335789203-aabd1fc54bc9?w=900&q=80&auto=format&fit=crop',
+            'Face Mask' => 'https://images.unsplash.com/photo-1596462503194-4a6d62c0d1b1?w=900&q=80&auto=format&fit=crop',
+            'Eye Care' => 'https://images.unsplash.com/photo-1598442012560-3f7b2b9f0f3a?w=900&q=80&auto=format&fit=crop',
+            'Lip Care' => 'https://images.unsplash.com/photo-1512206811215-3b3f5b2d7c2f?w=900&q=80&auto=format&fit=crop',
+            'Acne Care' => 'https://images.unsplash.com/photo-1598441941022-0f56a302e3af?w=900&q=80&auto=format&fit=crop',
+            'Body Care' => 'https://images.unsplash.com/photo-1570194065650-d99fb4b38cc8?w=900&q=80&auto=format&fit=crop',
+        ];
+
         $products = [
             // Cleanser (5)
             ['category' => 'Cleanser', 'brand' => 'CeraVe', 'name' => 'Gentle Foaming Cleanser', 'description' => 'A gentle daily cleanser that helps remove dirt and excess oil without stripping your skin barrier.', 'price' => 14.99, 'stock' => 120, 'skin_type' => 'normal-oily', 'volume' => '150ml', 'ingredients' => 'ceramides, niacinamide, glycerin', 'status' => 'active', 'image' => 'https://example.com/cleanser-foaming.jpg'],
@@ -163,6 +176,7 @@ class ProductSeeder extends Seeder
             $brand = $brandByName($product['brand']);
             $slug = Str::slug($product['name']);
 
+            $img = $product['image'] ?? null;
             Product::query()->updateOrCreate(
                 ['slug' => $slug],
                 [
@@ -173,7 +187,8 @@ class ProductSeeder extends Seeder
                     'description' => $product['description'],
                     'price' => $product['price'],
                     'stock' => $product['stock'],
-                    'image' => $product['image'],
+                    'image' => filter_var($img, FILTER_VALIDATE_URL) ? null : $img,
+                    'image_url' => filter_var($img, FILTER_VALIDATE_URL) ? $img : null,
                     'skin_type' => $product['skin_type'],
                     'volume' => $product['volume'],
                     'ingredients' => $product['ingredients'],

@@ -21,7 +21,8 @@
 
     <div class="card shadow-sm">
         <div class="card-body">
-            <form method="POST" action="{{ route('admin.products.store') }}">
+            <form method="POST" action="{{ route('admin.products.store') }}" enctype="multipart/form-data">
+
                 @csrf
 
                 <div class="mb-3">
@@ -31,6 +32,18 @@
                         @foreach ($categories as $category)
                             <option value="{{ $category->id }}" {{ old('category_id') == $category->id ? 'selected' : '' }}>
                                 {{ $category->name }}
+                            </option>
+                        @endforeach
+                    </select>
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label">Brand</label>
+                    <select name="brand_id" class="form-select">
+                        <option value="">-- Select Brand --</option>
+                        @foreach ($brands as $brand)
+                            <option value="{{ $brand->id }}" {{ old('brand_id') == $brand->id ? 'selected' : '' }}>
+                                {{ $brand->name }}
                             </option>
                         @endforeach
                     </select>
@@ -57,11 +70,56 @@
                     </div>
                 </div>
 
-                <div class="mb-3">
-                    <label class="form-label">Image URL</label>
-                    <input type="url" name="image" class="form-control" placeholder="https://example.com/image.jpg" id="imageUrl" value="{{ old('image') }}" required>
-                    <div class="form-text">Enter a valid image URL (https://...).</div>
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label">Skin Type</label>
+                        <input type="text" name="skin_type" value="{{ old('skin_type') }}" class="form-control" placeholder="e.g., normal, dry">
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label">Volume</label>
+                        <input type="text" name="volume" value="{{ old('volume') }}" class="form-control" placeholder="e.g., 150ml">
+                    </div>
                 </div>
+
+                <div class="mb-3">
+                    <label class="form-label">Ingredients</label>
+                    <textarea name="ingredients" class="form-control" rows="2">{{ old('ingredients') }}</textarea>
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label">Status</label>
+                    <select name="status" class="form-select">
+                        <option value="active" {{ old('status') == 'active' ? 'selected' : '' }}>Active</option>
+                        <option value="inactive" {{ old('status') == 'inactive' ? 'selected' : '' }}>Inactive</option>
+                        <option value="archived" {{ old('status') == 'archived' ? 'selected' : '' }}>Archived</option>
+                    </select>
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label">Product Image (choose one)</label>
+
+                    <div class="p-3 mb-3 rounded-3" style="border: 1px dashed rgba(0,0,0,0.15); background: rgba(0,0,0,0.02);">
+                        <div class="form-check mb-2">
+                            <input class="form-check-input" type="radio" name="image_source" id="imageSourceFile" value="file" checked>
+                            <label class="form-check-label" for="imageSourceFile">Upload file</label>
+                        </div>
+
+                        <input type="file" name="image" class="form-control" accept="image/*">
+                        <div class="form-text">Allowed: jpg, jpeg, png, webp (max 2MB).</div>
+                    </div>
+
+                    <div class="p-3 rounded-3" style="border: 1px dashed rgba(0,0,0,0.15); background: rgba(0,0,0,0.02);">
+                        <div class="form-check mb-2">
+                            <input class="form-check-input" type="radio" name="image_source" id="imageSourceUrl" value="url">
+                            <label class="form-check-label" for="imageSourceUrl">Paste image URL</label>
+                        </div>
+
+                        <input type="text" name="image_url" class="form-control" placeholder="https://example.com/image.jpg" id="imageUrl" value="{{ old('image_url') }}">
+                        <div class="form-text">Must be a valid URL starting with https://</div>
+                    </div>
+                </div>
+
+
 
                 <div class="mb-3">
                     <label class="form-label">Live Preview (100×100)</label>

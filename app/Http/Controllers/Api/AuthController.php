@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Storage;
 
 class AuthController extends Controller
 {
@@ -16,12 +17,37 @@ class AuthController extends Controller
         $validated = $request->validate([
             'name' => ['required', 'string', 'max:255'],
             'email' => ['required', 'email', 'max:255', 'unique:users,email,' . $user->id],
+            'image' => ['nullable', 'image', 'mimes:jpeg,png,jpg,webp', 'max:2048'],
+            'image_url' => ['nullable', 'url'],
         ]);
 
-        $user->update([
-            'name' => $validated['name'],
-            'email' => $validated['email'],
-        ]);
+        // Cleanup old local file when a new file upload is provided
+        if ($request->hasFile('image')) {
+            $old = $user->profile_image;
+            $isUrl = is_string($old) && (str_starts_with($old, 'http://') || str_starts_with($old, 'https://'));
+            if (!empty($old) && is_string($old) && !$isUrl) {
+                Storage::disk('public')->delete($old);
+            }
+
+            $path = $request->file('image')->store('profiles', 'public');
+
+            $user->update([
+                'name' => $validated['name'],
+                'email' => $validated['email'],
+                'profile_image' => $path,
+            ]);
+        } else if ($request->filled('image_url')) {
+            $user->update([
+                'name' => $validated['name'],
+                'email' => $validated['email'],
+                'profile_image' => $validated['image_url'],
+            ]);
+        } else {
+            $user->update([
+                'name' => $validated['name'],
+                'email' => $validated['email'],
+            ]);
+        }
 
         return response()->json([
             'message' => 'Profile updated successfully',
@@ -29,10 +55,12 @@ class AuthController extends Controller
                 'id' => $user->id,
                 'name' => $user->name,
                 'email' => $user->email,
-                'role' => $user->role ?? 'user',
+                'role' => $user->role ?? 'customer',
+                'profile_image' => $user->profile_image,
             ],
         ], 200);
     }
+
 
     public function changePassword(Request $request)
     {
@@ -73,7 +101,7 @@ class AuthController extends Controller
             'name' => $validated['name'],
             'email' => $validated['email'],
             'password' => Hash::make($validated['password']),
-            'role' => 'user',
+            'role' => 'customer',
         ]);
 
         return response()->json([
@@ -82,7 +110,7 @@ class AuthController extends Controller
                 'id' => $user->id,
                 'name' => $user->name,
                 'email' => $user->email,
-                'role' => $user->role ?? 'user',
+                'role' => $user->role ?? 'customer',
             ],
         ], 201);
     }
@@ -114,7 +142,7 @@ class AuthController extends Controller
                 'id' => $user->id,
                 'name' => $user->name,
                 'email' => $user->email,
-                'role' => $user->role ?? 'user',
+                'role' => $user->role ?? 'customer',
             ],
         ], 200);
     }
@@ -139,7 +167,7 @@ class AuthController extends Controller
                 'id' => $user->id,
                 'name' => $user->name,
                 'email' => $user->email,
-                'role' => $user->role ?? 'user',
+                'role' => $user->role ?? 'customer',
             ],
         ]);
     }
@@ -153,7 +181,7 @@ class AuthController extends Controller
                 'id' => $user->id,
                 'name' => $user->name,
                 'email' => $user->email,
-                'role' => $user->role ?? 'user',
+                'role' => $user->role ?? 'customer',
             ],
         ]);
     }
